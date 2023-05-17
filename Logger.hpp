@@ -16,7 +16,8 @@
 #include <stdlib.h>
 #include <filesystem>
 #define _XOPEN_SOURCE
-#include <filesystem>
+#define _POSIX_SOURCE
+#include <fcntl.h>
 #include <ctime>
 
 bool fileExists(const std::string& path) {
@@ -27,8 +28,26 @@ bool creatDirectory(const std::string& path) {
     return std::filesystem::create_directories(path);
 }
 
-bool concurrencyOpen(const std::string& path) {
-    return std::filesystem::create_directories(path);
+std::ofstream concurrencyOpen(const std::string& path) {
+    int fileDescriptor = open(path.c_str(), O_CREAT | O_WRONLY | O_EXCL, 0666);
+    if (fileDescriptor == -1) {
+        throw std::runtime_error("Impossible d'ouvrir le fichier " + path + " en mode exclusif.");
+    }
+
+    std::FILE* file = fdopen(fileDescriptor, "w");
+    if (!file) {
+        close(fileDescriptor);
+        throw std::runtime_error("Impossible de convertir le descripteur de fichier en flux de fichier.");
+    }
+
+    std::ofstream fileStream;
+
+    if (!fileStream.is_open()) {
+        fclose(file);
+        throw std::runtime_error("Impossible d'ouvrir le flux de sortie pour le fichier " + path);
+    }
+
+    return fileStream;
 }
 
 class Logger
