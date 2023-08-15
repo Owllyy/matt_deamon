@@ -1,90 +1,72 @@
 #pragma once
-#include <dirent.h>
-#include <iterator>
-#include <cstdlib>
-#include <cstring>
-#include <sstream>
+#include "file.hpp"
+#include <fstream>
 #include <iostream>
-#include <stdlib.h>
-#include <string>
-#include <sys/stat.h>
-#include <syslog.h>
-#include <unistd.h>
-#include <vector>
-#include <fstream> 
-#include <stdio.h>
-#include <stdlib.h>
-#include <filesystem>
-#define _XOPEN_SOURCE
-#define _POSIX_SOURCE
-#include <fcntl.h>
 #include <ctime>
 
-bool fileExists(const std::string& path) {
-    return std::filesystem::exists(path);
-}
+#define LOG_PATH "/var/log/matt_daemon/matt_daemon.log"
 
-bool creatDirectory(const std::string& path) {
-    return std::filesystem::create_directories(path);
-}
-
-std::ofstream concurrencyOpen(const std::string& path) {
-    int fileDescriptor = open(path.c_str(), O_CREAT | O_WRONLY | O_EXCL, 0666);
-    if (fileDescriptor == -1) {
-        throw std::runtime_error("Impossible d'ouvrir le fichier " + path + " en mode exclusif.");
-    }
-
-    std::FILE* file = fdopen(fileDescriptor, "w");
-    if (!file) {
-        close(fileDescriptor);
-        throw std::runtime_error("Impossible de convertir le descripteur de fichier en flux de fichier.");
-    }
-
-    std::ofstream fileStream;
-
-    if (!fileStream.is_open()) {
-        fclose(file);
-        throw std::runtime_error("Impossible d'ouvrir le flux de sortie pour le fichier " + path);
-    }
-
-    return fileStream;
-}
-
+/*
+    A logger class that use the method log() to log into the file defined by LOG_PATH.
+*/
 class Logger
 {
     private:
         std::ofstream logfile;
     public:
-        Logger() : logfile(open_log("/var/log/matt_deamon/matt_deamon.log")) {}
-        ~Logger() { logfile.close(); }
+
+        enum logTag {
+            LOG,
+            ERROR,
+            INFO
+        };
+        
+        Logger() : logfile(open_log(LOG_PATH)) {}
+        ~Logger() { logfile.flush(); logfile.close(); }
 
         std::ofstream static open_log(const std::string& path) {
-            if (!fileExists("/var/log/matt_deamon")) {
-                if (!creatDirectory("/var/log/matt_deamon")) {
-                    std::cerr << "Can't creat directory : " << path << std::endl;
-                }
-            }
+            excl_build_dir_path(LOG_PATH);
             std::ofstream file(path);
+
             if (!file.is_open()) {
                 throw std::runtime_error("Failed to open file " + path);
             }
+
             return file;
         }
 
-        static std::ostream & get_time_stamp(std::ofstream & file)
+        static std::ostream & get_time_stamp(std::ostream & file)
         {
+            char time_buffer[80];
+
             std::time_t now = std::time(nullptr);
-            char buffer[80];
-            std::strftime(buffer, 80, "[%d / %m / %Y - %H : %M : %S]", std::localtime(&now));
-            file << buffer;
-            return file;
+            if (std::strftime(time_buffer, 80, "[%d/%m/%Y-%H:%M:%S]", std::localtime(&now)) <= 0)
+                std::cerr << "Probleme time strftime" << std::endl;
+
+            return file << time_buffer;
         }
 
-        void log() {
-            logfile << &get_time_stamp << " TEST "<< std::endl;
-        }
+        /*
+            Log into a logfile your message in a format:
+            [d/m/Y-H:M:S] [ TAG ] - Matt_daemon: MSG
 
-        void log(std::ofstream file) {
-            file << &get_time_stamp << " TEST "<< std::endl;
+            @param tag: Logger::ERROR, Logger::INFO or Logger::LOG
+            @param msg: [char] or string
+        */
+        void log(logTag tag, std::string_view msg) {
+            logfile << &get_time_stamp;
+            switch (tag)
+            {
+                case ERROR:
+                    logfile << " [ ERROR ] - Matt_daemon: ";
+                    break;
+                case INFO:
+                    logfile << " [ INFO ] - Matt_daemon: ";
+                    break;
+                case LOG:
+                    logfile << " [ LOG ] - Matt_daemon: User input: ";
+                    break;
+            }
+            logfile << msg << std::endl;
         }
 };

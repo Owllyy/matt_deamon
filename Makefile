@@ -8,7 +8,7 @@ CXXFLAGS    =       -Wall -Wextra -Werror --std=c++17
 
 CXX			=		clang++
 
-DEP			=		Deamon.hpp
+DEP			=		Deamon.hpp Logger.hpp file.hpp
 
 %.o : %.cpp $(DEP)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
