@@ -1,4 +1,4 @@
-NAME        =       Matt_deamon
+NAME        =       Matt_daemon
 
 SRCS        =       main.cpp 
 					
@@ -8,7 +8,7 @@ CXXFLAGS    =       -Wall -Wextra -Werror --std=c++17
 
 CXX			=		clang++
 
-DEP			=		Deamon.hpp Logger.hpp file.hpp
+DEP			=		Deamon.hpp Tintin_reporter.hpp file.hpp
 
 %.o : %.cpp $(DEP)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<

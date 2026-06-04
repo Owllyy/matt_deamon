@@ -1,6 +1,6 @@
 #include "Deamon.hpp"
 #include "file.hpp"
-#include "Logger.hpp"
+#include "Tintin_reporter.hpp"
 #include "Matt.hpp"
 
 #define PORT 4242
@@ -19,10 +19,10 @@ int main(void)
 	// try {
 	// 	lock();
 
-	// 	Logger logger;
-	// 	logger.log(Logger::INFO, "Creating server.");
-	// 	logger.log(Logger::LOG, "Salut !");
-	// 	logger.log(Logger::ERROR, "Error file locked.");
+	// 	Tintin_reporter logger;
+	// 	logger.log(Tintin_reporter::INFO, "Creating server.");
+	// 	logger.log(Tintin_reporter::LOG, "Salut !");
+	// 	logger.log(Tintin_reporter::ERROR, "Error file locked.");
 
 	// 	unlock();
 	// } catch (std::exception &e) {

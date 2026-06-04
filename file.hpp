@@ -3,6 +3,11 @@
 #include <iostream>
 #include <filesystem>
 #include <semaphore.h>
+#include <fcntl.h>
+#include <sys/file.h>
+#include <cstring>
+#include <cerrno>
+#include <cstdio>
 
 #define LOCK_PATH "/var/lock/matt_daemon/matt_daemon.lock"
 

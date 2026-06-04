@@ -1,5 +1,5 @@
 #pragma once
-#include "Logger.hpp"
+#include "Tintin_reporter.hpp"
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/time.h>

@@ -9,7 +9,7 @@
 /*
     A logger class that use the method log() to log into the file defined by LOG_PATH.
 */
-class Logger
+class Tintin_reporter
 {
     private:
         std::ofstream logfile;
@@ -21,8 +21,8 @@ class Logger
             INFO
         };
         
-        Logger() : logfile(open_log(LOG_PATH)) {}
-        ~Logger() { logfile.flush(); logfile.close(); }
+        Tintin_reporter() : logfile(open_log(LOG_PATH)) {}
+        ~Tintin_reporter() { logfile.flush(); logfile.close(); }
 
         std::ofstream static open_log(const std::string& path) {
             excl_build_dir_path(LOG_PATH);
@@ -50,7 +50,7 @@ class Logger
             Log into a logfile your message in a format:
             [d/m/Y-H:M:S] [ TAG ] - Matt_daemon: MSG
 
-            @param tag: Logger::ERROR, Logger::INFO or Logger::LOG
+            @param tag: Tintin_reporter::ERROR, Tintin_reporter::INFO or Tintin_reporter::LOG
             @param msg: [char] or string
         */
         void log(logTag tag, std::string_view msg) {

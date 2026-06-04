@@ -1,5 +1,5 @@
 #pragma once
-#include "Logger.hpp"
+#include "Tintin_reporter.hpp"
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
@@ -13,7 +13,7 @@
 class Matt
 {
 private:
-    Logger logger;
+    Tintin_reporter logger;
     int server_fd;
     // struct sockaddr_in address;
     // fd_set client_set;
