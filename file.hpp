@@ -8,21 +8,21 @@
 #include <cstring>
 #include <cerrno>
 #include <cstdio>
+#include <unistd.h>
 
-#define LOCK_PATH "/var/lock/matt_daemon/matt_daemon.lock"
+#define LOCK_PATH "/var/lock/matt_daemon.lock"
 
 using namespace std::filesystem;
 
 int exclusiveOpenCreat(const std::string& path) {
 
-    int fd = open(path.c_str(), O_CREAT | O_EXCL, 0666);
+    int fd = open(path.c_str(), O_CREAT | O_RDWR, 0666);
 
     if (fd < 0) {
-        throw(std::runtime_error(path + " already exist."));
-    } else if (flock( fd, LOCK_EX )) { 
-        // Un-needed flock() because of the O_EXCL wich atomicly guaranty the unique creation of matt_daemon.lock
-        // Only here to match the incoherent 42 school subject
-        throw(std::runtime_error("Failed to lock file: " + std::string(strerror( errno ))));
+        throw(std::runtime_error("Can't open :" + path));
+    } else if (flock( fd, LOCK_EX | LOCK_NB )) { 
+        close(fd);
+        throw(std::runtime_error("Can't open :" + path));
     }
 
     return fd;
@@ -55,6 +55,8 @@ void excl_build_dir_path(const std::string& dir_path) {
 	}
 }
 
+static int lock_fd = -1;
+
 /*
     Create a new lockfile at LOCK_PATH.
     It also build the whole path before creating the file.
@@ -64,7 +66,7 @@ void excl_build_dir_path(const std::string& dir_path) {
 */
 void lock() {
     excl_build_dir_path(LOCK_PATH);
-    exclusiveOpenCreat(LOCK_PATH);
+    lock_fd = exclusiveOpenCreat(LOCK_PATH);
 }
 
 /*
@@ -76,7 +78,7 @@ void lock() {
 */
 void lock(const char *lock_path) {
     excl_build_dir_path(lock_path);
-    exclusiveOpenCreat(lock_path);
+    lock_fd = exclusiveOpenCreat(lock_path);
 }
 
 /*
@@ -85,6 +87,10 @@ void lock(const char *lock_path) {
     It ensure that the lockfile is deleted, else the function throw a std::runtime_error.
 */
 void unlock() {
+    if (lock_fd != -1) {
+        close(lock_fd);
+        lock_fd = -1;
+    }
     if (remove(LOCK_PATH)) { 
         throw(std::runtime_error("Failed to unlock file: " + std::string(strerror( errno ))));
     }
