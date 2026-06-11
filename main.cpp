@@ -12,6 +12,14 @@ void signal_handler(int signum) {
     g_signal = signum;
 }
 
+void init_signals() {
+    for (int i = 1; i < NSIG; ++i) {
+        // Unix kernel does not allow to capture SIGKILL and SIGSTOP
+        if (i == SIGKILL || i == SIGSTOP) continue;
+        signal(i, signal_handler);
+    }
+}
+
 int main(void)
 {
     if (getuid() != 0) {
@@ -20,15 +28,10 @@ int main(void)
     }
 
     try {
-        Daemon().lock_file("/var/lock/matt_daemon.lock")
-                .set_umask(027)
-                .work_directory("/")
-                .start();
+        //TODO Test ordering signal/daemon
+        Daemon();
 
-        signal(SIGINT, signal_handler);
-        signal(SIGTERM, signal_handler);
-        signal(SIGQUIT, signal_handler);
-        signal(SIGPIPE, SIG_IGN);
+        init_signals();
 
         Matt matt;
     } catch (const std::exception& e) {

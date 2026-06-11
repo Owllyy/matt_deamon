@@ -1,13 +1,12 @@
 #pragma once
-#include "file.hpp"
 #include <fstream>
-#include <iostream>
-#include <ctime>
+#include <string_view>
+#include <string>
 
-#define LOG_PATH "/var/log/matt_daemon.log"
+#define LOG_FILE "/var/log/matt_daemon/matt_daemon.log"
 
 /*
-    A logger class that use the method log() to log into the file defined by LOG_PATH.
+    A logger class that use the method log() to log into the file defined by LOG_FILE.
 */
 class Tintin_reporter
 {
@@ -21,52 +20,10 @@ class Tintin_reporter
             INFO
         };
         
-        Tintin_reporter() : logfile(open_log(LOG_PATH)) {}
-        ~Tintin_reporter() { logfile.flush(); logfile.close(); }
+        Tintin_reporter();
+        ~Tintin_reporter();
 
-        std::ofstream static open_log(const std::string& path) {
-            excl_build_dir_path(path);
-            std::ofstream file(path, std::ios_base::app);
-
-            if (!file.is_open()) {
-                throw std::runtime_error("Failed to open file " + path);
-            }
-
-            return file;
-        }
-
-        static std::ostream & print_time_stamp(std::ostream & file)
-        {
-            char time_buffer[80];
-
-            std::time_t now = std::time(nullptr);
-            if (std::strftime(time_buffer, 80, "[%d/%m/%Y-%H:%M:%S]", std::localtime(&now)) <= 0)
-                std::cerr << "Probleme time strftime" << std::endl;
-
-            return file << time_buffer;
-        }
-
-        /*
-            Log into a logfile your message in a format:
-            [d/m/Y-H:M:S] [ TAG ] - Matt_daemon: MSG
-
-            @param tag: Tintin_reporter::ERROR, Tintin_reporter::INFO or Tintin_reporter::LOG
-            @param msg: [char] or string
-        */
-        void log(logTag tag, std::string_view msg) {
-            print_time_stamp(logfile);
-            switch (tag)
-            {
-                case ERROR:
-                    logfile << " [ ERROR ] - Matt_daemon: ";
-                    break;
-                case INFO:
-                    logfile << " [ INFO ] - Matt_daemon: ";
-                    break;
-                case LOG:
-                    logfile << " [ LOG ] - Matt_daemon: User input: ";
-                    break;
-            }
-            logfile << msg << std::endl;
-        }
+        static std::ofstream open_log(const std::string& path);
+        static std::ostream & print_time_stamp(std::ostream & file);
+        void log(logTag tag, std::string_view msg);
 };
