@@ -1,7 +1,6 @@
 NAME        =       Matt_daemon
 
-SRCS        =       main.cpp 
-					
+SRCS        =       main.cpp Deamon.cpp Matt.cpp file.cpp Tintin_reporter.cpp					
 OBJS        =       ${SRCS:.cpp=.o}
 
 CXXFLAGS    =       -Wall -Wextra -Werror --std=c++17
