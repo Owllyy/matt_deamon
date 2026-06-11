@@ -13,7 +13,7 @@ void signal_handler(int signum) {
 }
 
 void init_signals() {
-    for (int i = 1; i < NSIG; ++i) {
+    for (int i = 0; i < NSIG; ++i) {
         // Unix kernel does not allow to capture SIGKILL and SIGSTOP
         if (i == SIGKILL || i == SIGSTOP) continue;
         signal(i, signal_handler);
@@ -28,11 +28,8 @@ int main(void)
     }
 
     try {
-        //TODO Test ordering signal/daemon
-        Daemon();
-
         init_signals();
-
+        Daemon();
         Matt matt;
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
