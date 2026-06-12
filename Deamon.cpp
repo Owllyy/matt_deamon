@@ -48,6 +48,4 @@ void Daemon::start(void) {
             close(fd);
         }
     }
-
-    logger.log(Tintin_reporter::INFO, "started. PID: " + std::to_string(getpid()) + ".");
 }
