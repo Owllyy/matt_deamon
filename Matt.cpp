@@ -19,12 +19,12 @@ Matt::Matt() : server_fd(socket(AF_INET, SOCK_STREAM, 0)) {
         throw std::runtime_error("Failed to set socket option of REUSEADDR to true.");
     }
     communicationSetup();
-    logger.log(Tintin_reporter::INFO, "Server created.");
+    Tintin_reporter::log(Tintin_reporter::INFO, "Server created.");
     server_loop();
 }
 
 void Matt::shutdown() {
-    logger.log(Tintin_reporter::INFO, "Quitting.");
+    Tintin_reporter::log(Tintin_reporter::INFO, "Quitting.");
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (client_sockets[i] > 0) close(client_sockets[i]);
     }
@@ -79,10 +79,10 @@ bool Matt::handle_client_messages(fd_set &client_set) {
                 }
 
                 if (msg == "quit") {
-                    logger.log(Tintin_reporter::INFO, "Request quit.");
+                    Tintin_reporter::log(Tintin_reporter::INFO, "Request quit.");
                     return false;
                 } else {
-                    logger.log(Tintin_reporter::LOG, msg);
+                    Tintin_reporter::log(Tintin_reporter::LOG, msg);
                 }
             }  
         }  
@@ -110,7 +110,7 @@ void Matt::server_loop(void) {
     while(true) {
         //TODO does this work properly
         if (g_signal != 0) {
-            logger.log(Tintin_reporter::INFO, "Signal received : " + std::to_string(g_signal));
+            Tintin_reporter::log(Tintin_reporter::INFO, "Signal received : " + std::to_string(g_signal));
             shutdown();
             return;
         }

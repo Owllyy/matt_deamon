@@ -4,6 +4,11 @@
 #include <ctime>
 #include <stdexcept>
 
+Tintin_reporter& Tintin_reporter::getInstance() {
+    static Tintin_reporter instance;
+    return instance;
+}
+
 Tintin_reporter::Tintin_reporter() : logfile(open_log(LOG_FILE)) {}
 
 Tintin_reporter::~Tintin_reporter() {
@@ -33,18 +38,19 @@ std::ostream & Tintin_reporter::print_time_stamp(std::ostream & file) {
 }
 
 void Tintin_reporter::log(logTag tag, std::string_view msg) {
-    print_time_stamp(logfile);
+    Tintin_reporter& instance = getInstance();
+    print_time_stamp(instance.logfile);
     switch (tag)
     {
         case ERROR:
-            logfile << " [ ERROR ] - Matt_daemon: ";
+            instance.logfile << " [ ERROR ] - Matt_daemon: ";
             break;
         case INFO:
-            logfile << " [ INFO ] - Matt_daemon: ";
+            instance.logfile << " [ INFO ] - Matt_daemon: ";
             break;
         case LOG:
-            logfile << " [ LOG ] - Matt_daemon: User input: ";
+            instance.logfile << " [ LOG ] - Matt_daemon: User input: ";
             break;
     }
-    logfile << msg << std::endl;
+    instance.logfile << msg << std::endl;
 }

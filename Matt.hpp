@@ -11,8 +11,6 @@ extern volatile sig_atomic_t g_signal;
 
 class Matt
 {
-    public:
-        Tintin_reporter logger;
     private:
         int server_fd;
         int client_sockets[MAX_CLIENTS];

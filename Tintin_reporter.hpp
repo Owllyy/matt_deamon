@@ -12,6 +12,8 @@ class Tintin_reporter
 {
     private:
         std::ofstream logfile;
+        Tintin_reporter();
+        ~Tintin_reporter();
     public:
 
         enum logTag {
@@ -20,10 +22,12 @@ class Tintin_reporter
             INFO
         };
         
-        Tintin_reporter();
-        ~Tintin_reporter();
+        Tintin_reporter(const Tintin_reporter&) = delete;
+        Tintin_reporter& operator=(const Tintin_reporter&) = delete;
+
+        static Tintin_reporter& getInstance();
 
         static std::ofstream open_log(const std::string& path);
         static std::ostream & print_time_stamp(std::ostream & file);
-        void log(logTag tag, std::string_view msg);
+        static void log(logTag tag, std::string_view msg);
 };

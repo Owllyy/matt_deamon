@@ -15,10 +15,12 @@ Daemon::Daemon() {
     if (pid > 0) {
         exit(EXIT_SUCCESS);
     } else if (pid < 0) {
+        Tintin_reporter::log(Tintin_reporter::ERROR, "Fork failed.");
         exit(EXIT_FAILURE);
     }
 
     if (setsid() < 0) {
+        Tintin_reporter::log(Tintin_reporter::ERROR, "setsid failed.");
         exit(EXIT_FAILURE);
     }
 
