@@ -9,10 +9,6 @@
 #include <cstdlib>
 
 Daemon::Daemon() {
-    start();
-}
-
-void Daemon::start(void) {
     lock();
     pid_t pid = fork();
     
@@ -23,13 +19,6 @@ void Daemon::start(void) {
     }
 
     if (setsid() < 0) {
-        exit(EXIT_FAILURE);
-    }
-
-    pid = fork();
-    if (pid > 0) {
-        exit(EXIT_SUCCESS);
-    } else if (pid < 0) {
         exit(EXIT_FAILURE);
     }
 

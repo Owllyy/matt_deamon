@@ -12,7 +12,7 @@ Tintin_reporter::~Tintin_reporter() {
 }
 
 std::ofstream Tintin_reporter::open_log(const std::string& path) {
-    excl_build_dir_path(path);
+    build_dir_path(path);
     std::ofstream file(path, std::ios_base::app);
 
     if (!file.is_open()) {
