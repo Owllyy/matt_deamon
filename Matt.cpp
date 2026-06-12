@@ -19,6 +19,7 @@ Matt::Matt() : server_fd(socket(AF_INET, SOCK_STREAM, 0)) {
         throw std::runtime_error("Failed to set socket option of REUSEADDR to true.");
     }
     communicationSetup();
+    logger.log(Tintin_reporter::INFO, "Server created.");
     server_loop();
 }
 

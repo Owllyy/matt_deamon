@@ -14,14 +14,6 @@ Daemon::Daemon() {
 
 void Daemon::start(void) {
     lock();
-
-    // TODO 
-    Tintin_reporter logger;
-    logger.log(Tintin_reporter::INFO, "Started.");
-    logger.log(Tintin_reporter::INFO, "Creating server.");
-    logger.log(Tintin_reporter::INFO, "Server created.");
-    logger.log(Tintin_reporter::INFO, "Entering Daemon mode.");
-
     pid_t pid = fork();
     
     if (pid > 0) {

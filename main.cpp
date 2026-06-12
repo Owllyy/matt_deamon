@@ -22,14 +22,19 @@ void init_signals() {
 
 int main(void)
 {
+    Tintin_reporter logger;
+
     if (getuid() != 0) {
         std::cerr << "Matt_daemon must be run as root." << std::endl;
         return EXIT_FAILURE;
     }
 
     try {
+        logger.log(Tintin_reporter::INFO, "Started.");
         init_signals();
+        logger.log(Tintin_reporter::INFO, "Entering Daemon mode.");
         Daemon();
+        logger.log(Tintin_reporter::INFO, "Creating server.");
         Matt matt;
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
