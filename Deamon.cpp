@@ -37,6 +37,4 @@ Daemon::Daemon() {
             close(fd);
         }
     }
-
-    logger.log(Tintin_reporter::INFO, "started. PID: " + std::to_string(getpid()) + ".");
 }

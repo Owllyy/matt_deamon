@@ -35,6 +35,8 @@ int main(void)
         logger.log(Tintin_reporter::INFO, "Entering Daemon mode.");
         Daemon();
         logger.log(Tintin_reporter::INFO, "Creating server.");
+        logger.log(Tintin_reporter::INFO, "started. PID: " + std::to_string(getpid()) + ".");
+
         Matt matt;
     } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
