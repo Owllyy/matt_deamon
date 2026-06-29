@@ -28,13 +28,10 @@ int main(void)
     }
 
     try {
-        Tintin_reporter::log(Tintin_reporter::INFO, "Started.");
         init_signals();
-        Tintin_reporter::log(Tintin_reporter::INFO, "Entering Daemon mode.");
-        Daemon();
-        Tintin_reporter::log(Tintin_reporter::INFO, "Creating server.");
-        Tintin_reporter::log(Tintin_reporter::INFO, "started. PID: " + std::to_string(getpid()) + ".");
+        Tintin_reporter::log(Tintin_reporter::INFO, "Started.");
 
+        Daemon();
         Matt matt;
     } catch (const std::exception& e) {
         Tintin_reporter::log(Tintin_reporter::ERROR, e.what());

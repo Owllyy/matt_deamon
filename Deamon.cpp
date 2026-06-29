@@ -9,6 +9,7 @@
 #include <cstdlib>
 
 Daemon::Daemon() {
+    Tintin_reporter::log(Tintin_reporter::INFO, "Entering Daemon mode.");
     lock();
     pid_t pid = fork();
     
@@ -39,4 +40,5 @@ Daemon::Daemon() {
             close(fd);
         }
     }
+    Tintin_reporter::log(Tintin_reporter::INFO, "started. PID: " + std::to_string(getpid()) + ".");
 }
