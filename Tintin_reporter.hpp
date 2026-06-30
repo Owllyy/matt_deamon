@@ -12,6 +12,7 @@ class Tintin_reporter
 {
     private:
         std::ofstream logfile;
+        bool is_valid;
         Tintin_reporter();
         ~Tintin_reporter();
     public:
@@ -27,7 +28,6 @@ class Tintin_reporter
 
         static Tintin_reporter& getInstance();
 
-        static std::ofstream open_log(const std::string& path);
         static std::ostream & print_time_stamp(std::ostream & file);
         static void log(logTag tag, std::string_view msg);
 };

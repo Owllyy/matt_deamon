@@ -18,12 +18,12 @@ int openCreate(const std::string& path) {
     int fd = open(path.c_str(), O_CREAT | O_RDWR, 0666);
 
     if (fd < 0) {
-        std::cerr << "Can’t open:" + path << std::endl;
-        throw(std::runtime_error("Can't open :" + path));
+        std::cerr << "Can’t open: " + path << std::endl;
+        throw(std::runtime_error("Can't open: " + path));
     } else if (flock( fd, LOCK_EX | LOCK_NB )) { 
         close(fd);
-        std::cerr << "Can’t open:" + path << std::endl;
-        throw(std::runtime_error("The lock file is already locked :" + path));
+        std::cerr << "Can’t open: " + path << std::endl;
+        throw(std::runtime_error("The lock file is already locked: " + path));
     }
 
     return fd;

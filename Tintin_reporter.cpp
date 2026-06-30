@@ -2,6 +2,7 @@
 #include "file.hpp"
 #include <iostream>
 #include <ctime>
+#include <ostream>
 #include <stdexcept>
 
 Tintin_reporter& Tintin_reporter::getInstance() {
@@ -9,22 +10,23 @@ Tintin_reporter& Tintin_reporter::getInstance() {
     return instance;
 }
 
-Tintin_reporter::Tintin_reporter() : logfile(open_log(LOG_FILE)) {}
-
-Tintin_reporter::~Tintin_reporter() {
-    logfile.flush();
-    logfile.close();
+Tintin_reporter::Tintin_reporter() : is_valid(true) {
+    try {
+        build_dir_path(LOG_FILE);
+        logfile.open(LOG_FILE, std::ios_base::app);
+        if (!logfile.is_open()) {
+            is_valid = false;
+        }
+    } catch (const std::exception& e) {
+        is_valid = false;
+    }
 }
 
-std::ofstream Tintin_reporter::open_log(const std::string& path) {
-    build_dir_path(path);
-    std::ofstream file(path, std::ios_base::app);
-
-    if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file " + path);
+Tintin_reporter::~Tintin_reporter() {
+    if (logfile.is_open()) {
+        logfile.flush();
+        logfile.close();
     }
-
-    return file;
 }
 
 std::ostream & Tintin_reporter::print_time_stamp(std::ostream & file) {
@@ -39,6 +41,11 @@ std::ostream & Tintin_reporter::print_time_stamp(std::ostream & file) {
 
 void Tintin_reporter::log(logTag tag, std::string_view msg) {
     Tintin_reporter& instance = getInstance();
+    if (!instance.is_valid) {
+        std::cerr << msg << std::endl;
+        return;
+    }
+
     print_time_stamp(instance.logfile);
     switch (tag)
     {
