@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cerrno>
 #include <stdexcept>
+#include "Tintin_reporter.hpp"
 
 Matt::Matt() : server_fd(socket(AF_INET, SOCK_STREAM, 0)) {
     Tintin_reporter::log(Tintin_reporter::INFO, "Creating server.");

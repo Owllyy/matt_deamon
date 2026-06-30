@@ -3,7 +3,6 @@
 #include <iostream>
 #include <ctime>
 #include <ostream>
-#include <stdexcept>
 
 Tintin_reporter& Tintin_reporter::getInstance() {
     static Tintin_reporter instance;

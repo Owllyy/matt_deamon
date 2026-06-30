@@ -1,5 +1,4 @@
 #pragma once
-#include "Tintin_reporter.hpp"
 #include <csignal>
 #include <sys/select.h>
 

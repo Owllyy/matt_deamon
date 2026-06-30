@@ -1,7 +1,6 @@
 #pragma once
 #include <fstream>
 #include <string_view>
-#include <string>
 
 #define LOG_FILE "/var/log/matt_daemon/matt_daemon.log"
 
