@@ -4,7 +4,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdexcept>
-#include <utility>
 #include <string>
 #include <cstdlib>
 
@@ -36,9 +35,7 @@ Daemon::Daemon() {
         dup2(fd, STDIN_FILENO);
         dup2(fd, STDOUT_FILENO);
         dup2(fd, STDERR_FILENO);
-        if (fd > STDERR_FILENO) {
-            close(fd);
-        }
+        close(fd);
     }
     Tintin_reporter::log(Tintin_reporter::INFO, "started. PID: " + std::to_string(getpid()) + ".");
 }

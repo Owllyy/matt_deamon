@@ -1,5 +1,4 @@
 #include "file.hpp"
-#include <iostream>
 #include <filesystem>
 #include <semaphore.h>
 #include <fcntl.h>
@@ -13,7 +12,7 @@ using namespace std::filesystem;
 
 static int lock_fd = -1;
 
-int openCreat(const std::string& path) {
+int openCreate(const std::string& path) {
 
     int fd = open(path.c_str(), O_CREAT | O_RDWR, 0666);
 
@@ -56,7 +55,7 @@ void build_dir_path(const std::string& dir_path) {
 
 void lock() {
     build_dir_path(LOCK_PATH);
-    lock_fd = openCreat(LOCK_PATH);
+    lock_fd = openCreate(LOCK_PATH);
 }
 
 void unlock() {
