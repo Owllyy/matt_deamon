@@ -12,7 +12,7 @@
 Matt::Matt() : server_fd(socket(AF_INET, SOCK_STREAM, 0)) {
     Tintin_reporter::log(Tintin_reporter::INFO, "Creating server.");
 
-    for (int i = 1; i < MAX_CLIENTS; i++) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
         client_sockets[i] = 0;
     }
 
